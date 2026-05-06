@@ -1,0 +1,142 @@
+# Block 0: MCP — Claude에게 손과 눈을 달아주기
+
+## EXPLAIN
+
+### MCP란?
+
+Model Context Protocol — Claude가 외부 서비스(Notion, Slack, Gmail 등)와 **직접 소통하는 표준 규격**.
+
+**비유:** 사무실에 전화, 프린터, 파일 캐비닛을 설치하는 것. 도구가 있어야 일을 할 수 있다. MCP는 Claude의 사무실에 업무 도구를 설치하는 과정이다.
+
+### MCP 이전과 이후
+
+| 상황 | MCP 없음 | MCP 있음 |
+|------|----------|----------|
+| "지난주 회의 내용 정리해줘" | 사용자가 직접 복붙 | Slack에서 자동 검색·정리 |
+| "경쟁사 분석 Notion에 정리해줘" | 사용자가 결과를 수동으로 옮김 | Notion에 직접 페이지 생성 |
+| "오늘 일정 확인해줘" | 불가능 | Google Calendar에서 조회 |
+
+### 비개발자에게 유용한 MCP 서버
+
+| MCP Server | 활용 시나리오 |
+|------------|--------------|
+| **Notion** | 리서치 DB 조회·업데이트, 기획 문서 자동 생성 |
+| **Google Drive** | 기존 기획서·보고서 검색 및 참조 |
+| **Slack** | 채널 메시지 검색, 회의록 정리, 알림 전송 |
+| **Figma** | 디자인 시안 컨텍스트 확인, 컴포넌트 메타데이터 조회 |
+| **Gmail** | 이메일 기반 이해관계자 커뮤니케이션 |
+
+### NAVER 사내 도구 연동 (사내 환경)
+
+NAVER 환경이라면 사내 전용 MCP 서버와 CLI를 연결할 수 있다:
+
+| 도구 | 연결 방식 | 활용 시나리오 |
+|------|----------|--------------|
+| **Confluence (위키)** | mcp-atlassian MCP + naver-confluence 스킬 | 위키 페이지 조회·생성·수정, 검색 |
+| **Jira** | mcp-atlassian MCP + naver-jira 스킬 | 이슈 CRUD, 스프린트 관리, 리포트 |
+| **Works** | works-cli + naver-works MCP | 메일·캘린더·회의실 예약·Talk·설문·게시판 |
+| **GHES (oss)** | oh-my-oss 스킬 | PR 리뷰, 이슈/디스커션 분석 |
+
+**토큰 발급 (연동 전 준비):**
+
+| 서비스 | 발급 페이지 |
+|--------|------------|
+| Jira | Jira > 프로필 > 개인용 액세스 토큰 |
+| Wiki | Wiki > 프로필 > 개인용 액세스 토큰 |
+| OSS | OSS > Settings > Tokens (scope: `repo` + `read:org`) |
+| Works | 토큰 불필요 (최초 사용 시 SSO 브라우저 로그인) |
+
+**자동 설정:** 사내 가이드의 **자동 설정 프롬프트**를 Claude Code에 붙여넣으면 AI가 토큰을 받아 설치·등록을 모두 자동으로 처리한다. 별도 컨테이너 설치는 불필요.
+
+- 📘 **사내 시스템 연동 가이드**: `https://wiki.navercorp.com/pages/viewpage.action?pageId=4828380766`
+
+**활용 예시 (연동 후):**
+
+```
+"내게 할당된 Jira 이슈 보여줘"
+"위키에서 '주간보고 템플릿' 검색해줘"
+"이번 주 Works 캘린더 일정 정리해줘"
+"Works 메일함에서 오늘 받은 편지 요약해줘"
+```
+
+**문의 채널:**
+
+| 구분 | 연락처 |
+|------|--------|
+| AI 코딩 도구 전반 | dl_ai_coding_tool_admin@navercorp.com |
+| Works MCP | dl_worksmcp@navercorp.com |
+
+> **팁:** 이 세션에서는 MCP의 개념과 일반 도구 연결을 먼저 익히고, 사내 도구는 위 가이드의 자동 설정 프롬프트로 한 번에 설정하는 것을 추천한다.
+
+### 연결 방법
+
+두 가지 방법이 있다:
+
+**방법 1: 터미널 명령어 (추천)**
+```bash
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+```
+
+**방법 2: settings.json 직접 편집**
+```json
+{
+  "mcpServers": {
+    "notion": {
+      "type": "url",
+      "url": "https://mcp.notion.com/mcp"
+    }
+  }
+}
+```
+
+둘 다 같은 결과. 터미널 명령어가 더 간편하다.
+
+### MCP 설치 범위 (--scope)
+
+MCP 서버를 추가할 때 `--scope` 옵션으로 **누가 사용하는지** 지정할 수 있다:
+
+| scope | 저장 위치 | 사용 범위 | 언제 쓰나 |
+|-------|----------|----------|----------|
+| `local` (기본값) | `~/.claude.json` | 나만, 이 프로젝트에서만 | 개인 테스트, 실험용 |
+| `project` | `.mcp.json` (프로젝트 루트) | 팀 전원 | **팀 공유 MCP 서버** (Git 커밋 대상) |
+| `user` | `~/.claude.json` | 나만, 모든 프로젝트 | 개인 유틸리티 |
+
+```bash
+# 팀 공유용 MCP 서버 추가 (프로젝트에 .mcp.json 생성)
+claude mcp add --transport http --scope project notion https://mcp.notion.com/mcp
+```
+
+> **팁:** 팀에서 같은 MCP 서버를 쓰려면 `--scope project`로 추가하면 `.mcp.json` 파일이 생성되어 팀원 전원이 자동으로 사용할 수 있다.
+
+> **참고:** Session 1에서 배운 것처럼, settings.json은 팀 공유용(Git 커밋)이고, settings.local.json은 개인 전용(Git 무시)이다. MCP 서버나 Hook 설정 중 팀 전체가 쓸 것은 settings.json에, 나만 쓸 것은 settings.local.json에 넣으면 된다.
+
+---
+
+## EXECUTE
+
+다음을 직접 실행해보세요:
+
+**Step 1: 현재 연결된 MCP 서버 확인**
+```
+/mcp
+```
+- 이미 연결된 서버가 있는지 확인
+
+**Step 2: Claude에게 물어보기**
+```
+MCP가 뭔지 쉽게 설명해줘. 내가 기획자인데, 유용한 MCP 서버 예시 3개도 추천해줘.
+```
+
+---
+
+## QUIZ
+
+**문제:** MCP의 핵심 역할을 가장 잘 설명한 것은?
+
+| 선택지 | 내용 |
+|--------|------|
+| A | Claude의 응답 품질을 높이는 학습 데이터 |
+| B | Claude의 대화 기록을 저장하는 메모리 시스템 |
+| C | Claude가 외부 서비스와 직접 소통하는 표준 규격 |
+
+**정답:** C — MCP는 Claude에게 "손과 눈"을 달아주는 것. Notion에서 읽고, Slack에서 검색하고, Gmail로 초안을 쓸 수 있게 해주는 연결 표준이다.
