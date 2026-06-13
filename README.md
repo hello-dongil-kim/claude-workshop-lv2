@@ -38,7 +38,7 @@
 - Subagent로 보조 작업을 위임할 수 있다
 - 이 모든 것을 Plugin으로 팀에 배포할 수 있다
 
-> **사내 도구 연동:** NAVER 환경이라면 Lv.2 완료 후 **NAVER 연동 설정 런북**을 실행하여 Confluence, Jira, Works, GHES를 Claude Code에 연결할 수 있습니다. Session 3(MCP)에서 배우는 개념이 그대로 적용됩니다.
+> **사내 도구 연동:** 회사에서 Confluence·Jira 같은 사내 도구를 쓴다면, Lv.2 완료 후 회사 내부의 사내 연동 가이드를 따라 Claude Code에 연결할 수 있습니다. Session 3(MCP)에서 배우는 개념이 그대로 적용됩니다.
 
 ## 기대 효과
 
@@ -274,7 +274,7 @@ Claude Code를 처음 시작하는 분을 위한 순서:
 - [ ] **4단계**: CLAUDE.md에 본인의 역할, 선호 형식, 작업 맥락 추가
 - [ ] **5단계**: Plan mode로 전환 후 첫 작업 탐색
 - [ ] **6단계**: Ask permissions 모드로 전환 후 간단한 작업 실행
-- [ ] **7단계**: 사내 Jira/Wiki/OSS/Works 연동 (Session 3에서 상세히 다룸)
+- [ ] **7단계**: 사내 도구(위키·이슈 트래커 등) 연동 (Session 3에서 상세히 다룸)
 - [ ] **8단계**: 반복 작업이 생기면 Skills로 자동화 (Session 2에서 상세히 다룸)
 - [ ] **9단계**: 작업 위임이 필요하면 Subagent / `/batch` / Cowork 탭 활용 (Session 4에서 상세히 다룸)
 
@@ -288,3 +288,13 @@ Claude Code를 처음 시작하는 분을 위한 순서:
 | `/session1-claude-md`가 안 됨 | Claude Code 패널에서 `/` 입력 후 자동완성 목록 확인 |
 | 퀴즈가 Phase A에서 나옴 | "STOP PROTOCOL을 따라줘"라고 리마인드 |
 | 블록을 건너뛰고 싶음 | 시작 시 원하는 블록 번호를 선택하면 됨 |
+
+---
+
+## 만든 사람
+
+**김동일 (Dongil Kim)**
+
+- Email: <hello@dongil.kim>
+- LinkedIn: <https://www.linkedin.com/in/hellodongilkim/>
+- GitHub: <https://github.com/hello-dongil-kim/>
