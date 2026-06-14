@@ -4,11 +4,11 @@
 
 ### 기획자용 Subagent 설계하기
 
-Subagent는 `.claude/agents/` 폴더에 SKILL.md 파일로 정의한다. 일반 Skill(`.claude/skills/`)과 달리 **독립 폴더에 위치**하며, **에이전트 전용 frontmatter 필드**를 추가하면 Subagent로 동작한다.
+Subagent는 `.claude/agents/<이름>.md` — 즉 `.claude/agents/` 폴더 안의 **단일 마크다운 파일** 하나로 정의한다. (Skill처럼 폴더+SKILL.md로 만드는 것이 아니다.) 이 `.md` 파일에 **에이전트 전용 frontmatter 필드**(name, description 등)를 넣으면 Subagent로 동작한다. 하위 폴더에 둘 수도 있지만, 표준은 `.claude/agents/` 바로 아래 평평한 `.md` 파일이다.
 
 ### desk-researcher 에이전트 설계 예시
 
-아래는 기획자가 리서치 작업을 위임할 수 있는 `desk-researcher` 에이전트의 전체 SKILL.md다:
+아래는 기획자가 리서치 작업을 위임할 수 있는 `desk-researcher` 에이전트의 전체 정의 파일(`.claude/agents/desk-researcher.md`)이다:
 
 ```markdown
 ---
@@ -88,8 +88,8 @@ tools:
 
 | 증상 | 원인 | 해결 |
 | ---- | ---- | ---- |
-| `/agents`에 에이전트가 안 보임 | SKILL.md 위치 오류 | `.claude/agents/{에이전트명}/SKILL.md` 경로 확인 |
-| `@에이전트명`으로 호출이 안 됨 | name 필드 불일치 | SKILL.md frontmatter의 `name`과 호출명이 같은지 확인 |
+| `/agents`에 에이전트가 안 보임 | 파일 위치 오류 | `.claude/agents/{에이전트명}.md` 경로 확인 |
+| `@에이전트명`으로 호출이 안 됨 | name 필드 불일치 | `.md` 파일 frontmatter의 `name`과 호출명이 같은지 확인 |
 | 에이전트가 도구를 사용하지 못함 | tools 목록 누락 | frontmatter의 `tools:` 에 필요한 도구 추가 (WebSearch, Read 등) |
 | 결과 품질이 기대 이하 | model 또는 maxTurns 부족 | 복잡한 분석은 `model: opus`, 탐색 작업은 `maxTurns: 20` 이상 |
 
@@ -98,16 +98,16 @@ tools:
 ```text
 1단계: Claude에게 물어보기
   "방금 만든 에이전트가 /agents에 안 보여.
-   SKILL.md를 확인하고 문제를 찾아줘."
+   .claude/agents/ 안의 정의 파일을 확인하고 문제를 찾아줘."
   → 경로 오류, name 불일치 등 대부분 여기서 해결
 
 2단계: 에이전트 재생성 요청
-  "이 에이전트의 SKILL.md를 다시 만들어줘.
+  "이 에이전트의 정의 파일(.md)을 다시 만들어줘.
    name은 {이름}, 역할은 {역할}로."
   → YAML 구문 오류 등 꼬인 설정 해결
 
 3단계: 설정 비교 요청
-  "내 에이전트 SKILL.md와 @templates/subagent-template.md를
+  "내 에이전트 정의 파일과 @templates/subagent-template.md를
    비교해서 빠진 부분을 알려줘."
   → 템플릿과의 차이에서 원인 발견
 ```
@@ -127,10 +127,10 @@ tools:
 @templates/subagent-template.md 를 참고해서.
 역할: {예: 데스크 리서처, 회의록 정리, 경쟁사 모니터링 등}
 이 에이전트가 할 일: {구체적 작업 설명}
-.claude/agents/{에이전트명}/SKILL.md 로 생성해줘.
+.claude/agents/{에이전트명}.md 로 생성해줘.
 ```
 
-- Claude가 생성한 SKILL.md를 검토
+- Claude가 생성한 정의 파일(.md)을 검토
 - model, maxTurns, tools 설정이 적절한지 확인
 - **핵심: YAML 문법을 몰라도 된다. Claude에게 시키고 결과를 검토하면 된다**
 

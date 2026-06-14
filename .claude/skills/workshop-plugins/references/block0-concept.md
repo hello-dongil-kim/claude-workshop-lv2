@@ -48,20 +48,25 @@
 Plugin은 Marketplace(GitHub 저장소)에 등록된다:
 
 ```
-marketplace-repo/           # GitHub 저장소
-├── plugin.json             # 플러그인 메타데이터
-├── skills/                 # Skills 모음
-│   ├── skill-a/
-│   │   └── SKILL.md
-│   └── skill-b/
-│       ├── SKILL.md
-│       └── references/
-├── commands/               # Commands 모음
-│   └── my-command.md
-└── agents/                 # Subagents 모음
-    └── my-agent/
-        └── SKILL.md
+marketplace-repo/                # GitHub 저장소 (마켓플레이스)
+├── .claude-plugin/
+│   └── marketplace.json        # 마켓플레이스 카탈로그 (어떤 플러그인이 있는지)
+└── my-plugin/                   # 플러그인 1개
+    ├── .claude-plugin/
+    │   └── plugin.json         # 플러그인 매니페스트 (이 폴더 안에만)
+    ├── skills/                 # Skills 모음
+    │   ├── skill-a/
+    │   │   └── SKILL.md
+    │   └── skill-b/
+    │       ├── SKILL.md
+    │       └── references/
+    ├── commands/               # Commands 모음
+    │   └── my-command.md
+    └── agents/                 # Subagents 모음
+        └── my-agent.md
 ```
+
+> **핵심:** 매니페스트(`plugin.json`)와 마켓플레이스 카탈로그(`marketplace.json`)만 `.claude-plugin/` 폴더 안에 두고, `skills/`·`commands/`·`agents/`는 플러그인 루트에 둔다.
 
 ### 설치/탐색 핵심 명령어
 

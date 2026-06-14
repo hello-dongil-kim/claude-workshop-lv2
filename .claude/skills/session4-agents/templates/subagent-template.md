@@ -1,6 +1,6 @@
 # Subagent 템플릿
 
-아래 템플릿을 복사하여 `.claude/agents/{에이전트명}/SKILL.md` 파일로 저장하세요.
+아래 템플릿을 복사하여 `.claude/agents/{에이전트명}.md` 파일로 저장하세요. (Skill처럼 폴더+SKILL.md가 아니라, `.claude/agents/` 안의 단일 마크다운 파일 하나입니다.)
 `{...}` 부분을 자신의 업무에 맞게 채우면 됩니다.
 
 ---

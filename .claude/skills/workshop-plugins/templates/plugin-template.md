@@ -9,7 +9,8 @@
 
 ```
 {plugin-name}/
-├── plugin.json                 # 플러그인 메타데이터
+├── .claude-plugin/
+│   └── plugin.json             # 플러그인 매니페스트 (이 폴더 안에만)
 ├── skills/                     # Skills 모음
 │   └── {skill-name}/
 │       ├── SKILL.md            # 스킬 정의
@@ -17,13 +18,14 @@
 ├── commands/                   # Commands 모음 (선택)
 │   └── {command-name}.md
 └── agents/                     # Subagents 모음 (선택)
-    └── {agent-name}/
-        └── SKILL.md
+    └── {agent-name}.md
 ```
+
+> **위치 규칙:** 매니페스트인 `plugin.json`만 `.claude-plugin/` 폴더 안에 두고, `skills/`·`commands/`·`agents/` 등 나머지 디렉터리는 플러그인 **루트**에 둔다.
 
 ---
 
-## plugin.json 템플릿
+## .claude-plugin/plugin.json 템플릿
 
 ```json
 {

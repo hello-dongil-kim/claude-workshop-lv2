@@ -7,7 +7,7 @@ description: |
 
 # Workshop. Plugins — 확장 기능을 패키지로 묶어 배포하기
 
-> **난이도:** 실습 | **소요:** ~25분 | **블록:** 2개
+> **난이도:** ★★★★★ (실습) | **소요:** ~25분 | **블록:** 2개
 > **대상:** Claude Code를 확장하려는 기획자, UX 리서처, PM
 > **전제:** Session 1~4 이해 (CLAUDE.md, Skills, MCP/Hooks, Subagents/Agent Teams)
 
