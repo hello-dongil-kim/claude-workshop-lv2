@@ -102,11 +102,13 @@ CLAUDE.md는 위치에 따라 적용 범위와 강제력이 다르다. 우선순
 
 - 없으면 정상 — 필요할 때 만들면 된다
 
+> ✅ **이렇게 되면 성공:** `.claude/` 폴더의 구성(settings.json, commands/, skills/ 등)을 Claude가 나열해 주고, commands/와 rules/의 차이를 내 말로 한 줄로 설명할 수 있으면 성공.
+
 ---
 
 ## QUIZ
 
-**문제:** .claude/ 폴더 안의 commands/와 rules/의 차이는?
+**문제 1 (회상형):** .claude/ 폴더 안의 commands/와 rules/의 차이는?
 
 | 선택지 | 내용 |
 |--------|------|
@@ -115,3 +117,17 @@ CLAUDE.md는 위치에 따라 적용 범위와 강제력이 다르다. 우선순
 | C | commands/는 팀 공용이고, rules/는 개인 전용이다 |
 
 **정답:** B — commands/의 파일은 `/파일명`으로 직접 호출할 때만 실행된다. rules/의 파일은 CLAUDE.md처럼 매 세션 자동 로딩되되, 주제별로 파일을 분리할 수 있다. 둘 다 Git 커밋 대상이고 팀 공용이다.
+- A 오답: 둘 다 Git 커밋 대상이다 — 커밋 여부로 갈리는 건 settings.json vs settings.local.json이다.
+- C 오답: 둘 다 팀 공용이다 — 개인 전용은 `.local` 짝(예: settings.local.json, CLAUDE.local.md)이다.
+
+**문제 2 (적용형):** 다음 상황에서 가장 적절한 것은? — CLAUDE.md가 190줄까지 늘어났는데, "리서치 품질 기준"이 길어 더 늘 것 같다. 이 기준은 매 세션 항상 적용돼야 한다.
+
+| 선택지 | 내용 |
+|--------|------|
+| A | 리서치 품질 기준을 `.claude/commands/research.md`로 옮긴다 |
+| B | 리서치 품질 기준을 `.claude/rules/research-standards.md`로 분리한다 |
+| C | 그냥 CLAUDE.md에 계속 적어 250줄까지 늘린다 |
+
+**정답:** B — 매 세션 자동 적용돼야 하는 규칙이므로 rules/로 분리한다. rules/는 CLAUDE.md의 확장이라 자동 로딩되면서 CLAUDE.md를 200줄 이하로 유지할 수 있다.
+- A 오답: commands/는 `/명령어`로 부를 때만 실행 — "항상 적용"이라는 요건과 맞지 않는다.
+- C 오답: 200줄을 넘기면 뒤쪽 규칙 준수율이 떨어진다 — 분리가 정답.

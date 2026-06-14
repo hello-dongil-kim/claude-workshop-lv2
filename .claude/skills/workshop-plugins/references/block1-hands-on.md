@@ -16,8 +16,7 @@ ux-research-plugin/
 ├── commands/
 │   └── interview-guide.md       # /interview-guide — 인터뷰 가이드 생성
 └── agents/
-    └── insight-analyzer/        # 인터뷰 데이터 → 인사이트 추출 Subagent
-        └── SKILL.md
+    └── insight-analyzer.md      # 인터뷰 데이터 → 인사이트 추출 Subagent (단일 .md 파일)
 ```
 
 **효과:** 팀원 누구나 같은 형식의 리서치 브리프를 작성하고, 인터뷰 가이드를 생성하고, 분석 결과를 일관된 포맷으로 받을 수 있다.
@@ -34,8 +33,7 @@ service-planning-plugin/
 ├── commands/
 │   └── competitor-scan.md       # /competitor-scan — 경쟁사 빠른 분석
 └── agents/
-    └── spec-reviewer/           # 스펙 문서 품질 리뷰 Subagent
-        └── SKILL.md
+    └── spec-reviewer.md         # 스펙 문서 품질 리뷰 Subagent (단일 .md 파일)
 ```
 
 **효과:** PRD의 구조가 팀 전체에서 통일되고, 경쟁사 분석 프로세스가 표준화되며, 스펙 리뷰를 자동으로 받을 수 있다.
@@ -50,8 +48,7 @@ pmo-governance-plugin/
 ├── commands/
 │   └── kpi-dashboard.md         # /kpi-dashboard — KPI 현황 요약
 └── agents/
-    └── quality-auditor/         # 산출물 품질 감사 Subagent
-        └── SKILL.md
+    └── quality-auditor.md       # 산출물 품질 감사 Subagent (단일 .md 파일)
 ```
 
 **효과:** 출시 전 체크리스트 누락이 사라지고, KPI 현황을 빠르게 파악하며, 산출물 품질을 자동으로 감사받을 수 있다.
@@ -140,7 +137,24 @@ Session 2에서 다룬 skill-template.md(.claude/skills/session2-skills/template
 - 트리거 키워드로 대화를 시작하여 스킬이 자동 로딩되는지 확인
 - 산출물이 의도한 형식대로 나오는지 확인
 
-**Step 4: 캡스톤 과제 — 나의 3-Skill 워크플로우 설계**
+**Step 4: 내 Skill을 플러그인으로 묶어 로컬 설치 (처음부터 끝까지 완주)**
+
+Step 2에서 만든 Skill 1개를 **플러그인 1개로 묶어 로컬에 설치**하는 전체 흐름을 한 번 완주한다. Claude에게 아래처럼 시키면 된다(직접 폴더/JSON을 만들 필요 없다):
+
+```text
+방금 만든 {스킬명} Skill을 플러그인으로 묶어줘.
+@templates/plugin-template.md 를 참고해서:
+1. {plugin-name}/ 폴더를 만들고, .claude-plugin/plugin.json (name, description, version) 생성
+2. 그 안 skills/ 아래로 내 SKILL.md를 옮겨 배치
+3. 이 폴더를 로컬 마켓플레이스로 추가하고 플러그인을 설치하는 명령을 알려줘 (/plugin marketplace add {경로}, /plugin install {이름})
+```
+
+- Claude가 만든 폴더 구조를 확인한다: `plugin.json`은 `.claude-plugin/` **안**에, `skills/`는 플러그인 **루트**에 있어야 한다.
+- 안내받은 명령으로 로컬 설치한 뒤, `/plugins` 목록에 내 플러그인이 보이는지, 스킬이 `{플러그인명}:{스킬명}` 네임스페이스로 호출되는지 확인한다.
+
+> ✅ **이렇게 되면 성공:** 내 Skill이 들어간 플러그인이 `/plugins` 목록에 뜨고, 해당 스킬을 `{플러그인명}:{스킬명}`으로 호출했을 때 정상 작동하면 — 스킬 제작부터 플러그인 패키징·로컬 설치까지 완주한 것이다.
+
+**Step 5: 캡스톤 과제 — 나의 3-Skill 워크플로우 설계**
 
 Session 1~4에서 배운 모든 것을 종합하여, 자신의 실제 업무에 적용할 워크플로우를 설계해보세요:
 
@@ -162,7 +176,7 @@ Session 1~4에서 배운 모든 것을 종합하여, 자신의 실제 업무에 
 
 ## QUIZ
 
-**문제:** 이 커리큘럼에서 배운 확장 기능의 계층 순서로 올바른 것은?
+**문제 1 (회상형):** 이 커리큘럼에서 배운 확장 기능의 계층 순서로 올바른 것은?
 
 | 선택지 | 내용 |
 |--------|------|
@@ -171,3 +185,17 @@ Session 1~4에서 배운 모든 것을 종합하여, 자신의 실제 업무에 
 | C | CLAUDE.md → Skills → Subagents → Hooks + MCP → Agent Teams → Plugins |
 
 **정답:** A — CLAUDE.md(기본 규칙)를 기반으로, Skills(자동 로딩 지식) → Hooks + MCP(자동화 + 외부 도구) → Subagents(독립 위임) → Agent Teams(병렬 협업) → Plugins(배포/패키징) 순서로 계층이 쌓인다. 아래에서 위로, 단순한 것에서 복잡한 것으로 확장해가는 구조다.
+- B 오답: Skills가 Hooks/MCP보다 먼저 쌓이는 기초층이다 — 순서가 뒤바뀌었다.
+- C 오답: Hooks/MCP는 Subagents보다 아래층이다 — 자동화·도구 연결이 위임보다 먼저다.
+
+**문제 2 (적용형):** 다음 상황에서 가장 적절한 것은? — UX 리서치 팀 5명이 "리서치 브리프 Skill + 인터뷰 가이드 Command + 인사이트 분석 Subagent"를 모두 똑같이 쓰게 하고, 앞으로 개선판도 한 번에 동기화하고 싶다.
+
+| 선택지 | 내용 |
+|--------|------|
+| A | 5명에게 각 파일을 메신저로 보내 각자 폴더에 복사하게 한다 |
+| B | 세 가지를 하나의 Plugin으로 묶어 마켓플레이스에 올리고, 팀원은 `/plugin install` 한 번으로 설치한다 |
+| C | 한 명의 `.claude/` 폴더 전체를 압축해 나눠준다 |
+
+**정답:** B — 여러 확장 기능을 한 번에 배포·버전 관리하는 것이 Plugin의 핵심 용도다. 설치는 한 번, 개선판은 `git pull`로 전원 동기화된다.
+- A 오답: 수동 복사는 빠뜨림·버전 어긋남이 생기고, 개선판 동기화가 어렵다.
+- C 오답: 폴더 통째 공유는 불필요한 개인 설정까지 섞이고 네임스페이스·버전 관리가 안 된다.
